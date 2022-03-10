@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const { log } = require('console');
 const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
 const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 
@@ -25,19 +26,17 @@ const controller = {
 	
 	// Create -  Method to store
 	store: (req, res) => {
-
-		let newProduct = req.body;
-		newProduct.image = req.file.filename;
-		
 		let productosActuales = fs.readFileSync(productsFilePath, 'utf-8')
 		productosActuales = JSON.parse(productosActuales)
-		
+		let newProduct = req.body;
+		newProduct.image = req.file.filename;
+		let ultimoIndice = productosActuales.length+1;
+		newProduct.id = ultimoIndice;
+		console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+		console.log(newProduct)
 		productosActuales.push(newProduct)
 		let newProductoJSON = JSON.stringify(productosActuales)
-		
-
 		//const nuevaVariableJSON = JSON.stringify(newProduct)
-		
 		fs.writeFileSync(productsFilePath, newProductoJSON)
 		//products.push(newProductoJSON);
 		res.redirect('products')
