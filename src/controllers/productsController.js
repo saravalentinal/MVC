@@ -19,14 +19,27 @@ const controller = {
 
 	// Create - Form to create
 	create: (req, res) => {
+
 		res.render('product-create-form');
 	},
 	
 	// Create -  Method to store
 	store: (req, res) => {
-		const newProduct = req.body;
+
+		let newProduct = req.body;
 		newProduct.image = req.file.filename;
-		products.push(newProduct);
+		
+		let productosActuales = fs.readFileSync(productsFilePath, 'utf-8')
+		productosActuales = JSON.parse(productosActuales)
+		
+		productosActuales.push(newProduct)
+		let newProductoJSON = JSON.stringify(productosActuales)
+		
+
+		//const nuevaVariableJSON = JSON.stringify(newProduct)
+		
+		fs.writeFileSync(productsFilePath, newProductoJSON)
+		//products.push(newProductoJSON);
 		res.redirect('products')
 	},
 
