@@ -15,7 +15,9 @@ const controller = {
 
 	// Detail - Detail from one product
 	detail: (req, res) => {
-		res.render('detail');
+		
+		let idProducto = req.params.id;
+		res.render('detail',{"productoSeleccionado": products[idProducto-1]});
 	},
 
 	// Create - Form to create
@@ -50,7 +52,7 @@ const controller = {
 	// Update - Method to update
 	update: (req, res) => {
 		// Do the magic
-		console.log (req.body)
+		
 		let id = req.params.id;
 		let infoForm=req.body;
 		
@@ -76,6 +78,17 @@ const controller = {
 	// Delete - Delete one product from DB
 	destroy : (req, res) => {
 		// Do the magic
+		let idProducto = req.params.id;
+		
+		const nuevoProducto = products.filter(function(producto){
+			return producto.id != idProducto;
+		})
+		//console.log (nuevoProducto)
+
+		fs.writeFileSync(productsFilePath,JSON.stringify(nuevoProducto))
+
+		res.redirect('/')
+
 	}
 };
 
