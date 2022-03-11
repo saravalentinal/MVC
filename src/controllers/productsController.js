@@ -32,8 +32,6 @@ const controller = {
 		newProduct.image = req.file.filename;
 		let ultimoIndice = productosActuales.length+1;
 		newProduct.id = ultimoIndice;
-		console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-		console.log(newProduct)
 		productosActuales.push(newProduct)
 		let newProductoJSON = JSON.stringify(productosActuales)
 		//const nuevaVariableJSON = JSON.stringify(newProduct)
@@ -41,14 +39,38 @@ const controller = {
 		//products.push(newProductoJSON);
 		res.redirect('products')
 	},
-
 	// Update - Form to edit
 	edit: (req, res) => {
-		res.render('product-edit-form');
+		let idProducto = req.params.id;
+		//console.log (idProducto);
+		res.render('product-edit-form',{"productoSeleccionado": products[idProducto-1]});
+		//this.update()
+
 	},
 	// Update - Method to update
 	update: (req, res) => {
 		// Do the magic
+		console.log (req.body)
+		let id = req.params.id;
+		let infoForm=req.body;
+		
+
+		products.forEach(function (elemento){
+			if (elemento.id == id)
+			{
+				elemento.name = infoForm.name;
+				elemento.price = infoForm.price;
+				elemento.discount = infoForm.discount;
+				elemento.category = infoForm.cetegory;
+				elemento.description = infoForm.description;
+			}
+		})
+	
+		fs.writeFileSync(productsFilePath,JSON.stringify(products))
+
+		res.redirect('/')
+
+		//console.log(infoForm)
 	},
 
 	// Delete - Delete one product from DB
